@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="index - Copia_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index - Copia_files/libs/quarto-html/tabby.min.js"></script>
+<script src="index - Copia_files/libs/quarto-html/popper.min.js"></script>
+<script src="index - Copia_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="index - Copia_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index - Copia_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="index - Copia_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="Brenner de Araujo Silva">
+  <title>Análise de Sobrevivência: Câncer de Mama</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="index - Copia_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="index - Copia_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="index - Copia_files/libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="custom.css">
+  <link href="index - Copia_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="index - Copia_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="index - Copia_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="index - Copia_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="Capa.png" data-background-size="cover" class="quarto-title-block center">
+  <h1 class="title">Análise de Sobrevivência: Câncer de Mama</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Brenner de Araujo Silva 
+</div>
+        <p class="quarto-title-affiliation">
+            Universidade Federal Fluminense
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="contextualização" class="slide level2">
+<h2>Contextualização</h2>
+<ul>
+<li><strong>Origem:</strong> Dados de registros clínicos europeus (GBSG), utilizados em estudos clássicos de modelagem prognóstica por <strong>Royston e Altman</strong>.</li>
+<li><strong>Natureza do Estudo:</strong> Trata-se de um estudo <strong>observacional com seguimento prospectivo</strong>.</li>
+<li><strong>Amostra:</strong> 686 pacientes com câncer de mama e linfonodos positivos, cujas características basais foram registradas no início do tratamento.</li>
+<li><strong>Dinâmica:</strong> O acompanhamento se estende por anos, refletindo a evolução clínica da doença e a heterogeneidade entre as pacientes.</li>
+</ul>
+</section>
+<section id="o-evento-de-interesse-e-a-censura" class="slide level2">
+<h2>O Evento de Interesse e a Censura</h2>
+<ul>
+<li><strong>Evento de Interesse:</strong> Definido como o <strong>óbito</strong> da paciente ou a recorrência da doença, com tempo mensurado em <strong>dias</strong>.</li>
+<li><strong>Censura à Direita (<code>status = 0</code>):</strong> Ocorre quando a paciente não apresenta o evento até o final do estudo ou é perdida durante o seguimento.</li>
+<li><strong>Premissas Estatísticas:</strong>
+<ul>
+<li>Assume-se que a <strong>censura é não informativa</strong> (o motivo da saída não está ligado ao prognóstico).</li>
+<li>Não há presença de <strong>truncamento</strong> nos dados.</li>
+</ul></li>
+<li><strong>Tratamento:</strong> A informação parcial é aproveitada via estimadores não paramétricos (Kaplan-Meier).</li>
+</ul>
+</section>
+<section id="variáveis-de-resposta-desfecho" class="slide level2">
+<h2>Variáveis de Resposta (Desfecho)</h2>
+<p>Estas são as variáveis que compõem o objeto de sobrevivência:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 35%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variável</th>
+<th>Significado</th>
+<th>Unidade/Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong><code>rfstime</code></strong></td>
+<td>Tempo de sobrevida livre de recorrência</td>
+<td>Quantitativa (Dias)</td>
+</tr>
+<tr class="even">
+<td><strong><code>status</code></strong></td>
+<td>Indicador do evento clínico</td>
+<td>0 = Censura <br> 1 = Óbito/Evento</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="covariáveis-qualitativas" class="slide level2">
+<h2>Covariáveis Qualitativas</h2>
+<p>Fatores categóricos que estratificam os grupos de risco:</p>
+<ul>
+<li><strong><code>meno</code> (Estado Menopausal):</strong> Classifica a paciente entre pré-menopausa (0) ou pós-menopausa (1), indicando o perfil hormonal basal.</li>
+<li><strong><code>grade</code> (Grau Histológico):</strong> Variável ordinal (1, 2 ou 3) que mede o nível de diferenciação das células tumorais (agressividade).</li>
+<li><strong><code>hormon</code> (Terapia Hormonal):</strong> Indica se houve tratamento adjuvante com tamoxifeno (0 = não; 1 = sim).</li>
+</ul>
+</section>
+<section id="covariáveis-quantitativas" class="slide level2">
+<h2>Covariáveis Quantitativas</h2>
+<p>Medidas numéricas e marcadores biológicos:</p>
+<ul>
+<li><strong><code>age</code></strong>: Idade da paciente (anos).</li>
+<li><strong><code>size</code></strong>: Tamanho do tumor primário (mm).</li>
+<li><strong><code>nodes</code></strong>: Contagem de linfonodos positivos (principal marcador de disseminação).</li>
+<li><strong><code>pgr</code> / <code>er</code></strong>: Receptores de progesterona e estrogênio (fmol/L) — indicam a sensibilidade biológica do tumor ao tratamento.</li>
+</ul>
+</section>
+<section id="metodologia" class="slide level2">
+<h2>METODOLOGIA</h2>
+<p>Nesta seção, descrevemos os procedimentos estatísticos utilizados para analisar a sobrevida livre de recorrência das pacientes, focando em métodos não paramétricos que permitem a inclusão de dados censurados.</p>
+<p>A análise foi conduzida no software <strong>R</strong>, utilizando os pacotes <code>survival</code> para os cálculos estatísticos e <code>survminer</code> para a visualização das curvas e tabelas de risco.</p>
+</section>
+<section id="estimador-de-kaplan-meier-e-tempo-mediano" class="slide level2">
+<h2>Estimador de Kaplan-Meier e Tempo Mediano</h2>
+<ul>
+<li><strong>Estimador de Kaplan-Meier:</strong>
+<ul>
+<li><strong>O que é:</strong> Um método não paramétrico utilizado para estimar a probabilidade de sobrevivência em diferentes intervalos de tempo.</li>
+<li><strong>Por que utilizar:</strong> É o padrão ouro para lidar com dados de sobrevivência que contêm censura, pois aproveita a informação de pacientes que não sofreram o evento até o final do estudo.</li>
+</ul></li>
+<li><strong>Tempo Mediano de Sobrevivência:</strong>
+<ul>
+<li><strong>O que é:</strong> O ponto no tempo onde a probabilidade de sobrevivência cai para 50%.</li>
+<li><strong>Por que utilizar:</strong> Diferente da média, a mediana não é severamente afetada por valores extremos ou pela presença de censuras tardias, sendo mais representativa em estudos clínicos.</li>
+</ul></li>
+</ul>
+</section>
+<section id="comparação-entre-curvas-log-rank-e-peto-peto" class="slide level2">
+<h2>Comparação entre Curvas: Log-Rank e Peto-Peto</h2>
+<p>Para verificar se as covariáveis qualitativas (como terapia hormonal e grau) influenciam a sobrevida, utilizamos dois testes complementares:</p>
+<ol type="1">
+<li><strong>Teste de Log-Rank:</strong>
+<ul>
+<li>Dá peso igual a todos os tempos de falha observados. É ideal para detectar diferenças que ocorrem mais tarde no acompanhamento.</li>
+</ul></li>
+<li><strong>Teste de Peto-Peto:</strong>
+<ul>
+<li>Dá maior peso aos eventos que ocorrem no início do estudo. É utilizado para identificar se há um benefício (ou risco) imediato entre os grupos comparados.</li>
+</ul></li>
+</ol>
+</section>
+<section id="comparações-múltiplas-e-correção-de-holm-bonferroni" class="slide level2">
+<h2>Comparações Múltiplas e Correção de Holm-Bonferroni</h2>
+<ul>
+<li><strong>Contexto:</strong> Quando comparamos variáveis com mais de dois níveis (como o <strong>Grau Histológico</strong>, que possui níveis 1, 2 e 3), a realização de vários testes par a par aumenta o risco de encontrar diferenças falsas (Erro Tipo I).</li>
+<li><strong>Procedimento:</strong> Realizamos comparações par a par entre todos os níveis da variável.</li>
+<li><strong>Correção de Holm-Bonferroni:</strong> Aplicada para ajustar os p-valores resultantes dessas comparações, garantindo que o nível de significância global do estudo seja preservado e os resultados sejam estatisticamente confiáveis.</li>
+</ul>
+</section>
+<section id="medidas-resumo-para-variáveis-quantitativas" class="slide level2">
+<h2>Medidas Resumo para Variáveis Quantitativas</h2>
+<p>Para descrever o perfil clínico das pacientes em relação às variáveis contínuas (<code>age</code>, <code>size</code>, <code>nodes</code>, <code>pgr</code>, <code>er</code>), adotamos as seguintes medidas:</p>
+<ul>
+<li><strong>Tendência Central:</strong> Média e Mediana.</li>
+<li><strong>Dispersão:</strong> Desvio-padrão.</li>
+<li><strong>Objetivo:</strong> Essas medidas permitem comparar as características basais entre o grupo que sofreu o evento e o grupo censurado, facilitando a identificação de padrões biológicos associados a um pior prognóstico antes mesmo da modelagem estatística.</li>
+</ul>
+</section>
+<section id="resultados-análise-global-sem-covariáveis" class="slide level2">
+<h2>RESULTADOS: Análise Global (Sem Covariáveis)</h2>
+<p>Nesta primeira etapa, observamos o comportamento da sobrevivência para todo o grupo de pacientes.</p>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index---Copia_files/figure-revealjs/unnamed-chunk-2-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:40%;">
+<p>Estatísticas:</p>
+<ul>
+<li>Tempo Mediano: 1807 dias.</li>
+<li>IC (95%): [1587, 2030].</li>
+<li>Análise: A mediana indica que 50% das pacientes atingem o evento em cerca de 5,5 anos.</li>
+</ul>
+</div></div>
+</section>
+<section id="análise-por-covariáveis-qualitativas" class="slide level2 smaller">
+<h2>Análise por Covariáveis Qualitativas</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Terapia Hormonal (<code>hormon</code>)</a></li><li><a href="#tabset-1-2">Grau Histológico (grade)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index---Copia_files/figure-revealjs/unnamed-chunk-3-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:30%;">
+<p>Conclusão: O teste Log-Rank indica diferença significativa. O uso de hormônio melhora visivelmente o prognóstico.</p>
+</div></div>
+</div>
+<div id="tabset-1-2">
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index---Copia_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:30%;">
+<p>Conclusão: O Grau 1 (baixo) apresenta a melhor sobrevida, enquanto o Grau 3 (alto) tem queda acentuada.</p>
+</div></div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparações-múltiplas-grau-histológico" class="slide level2">
+<h2>Comparações Múltiplas (Grau Histológico)</h2>
+<p>Como a variável <code>grade</code> possui 3 níveis, aplicamos o teste par a par com a <strong>Correção de Holm-Bonferroni</strong>:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using Log-Rank test 
+
+data:  dados and grade 
+
+  1       2      
+2 0.00044 -      
+3 2.6e-05 0.03537
+
+P value adjustment method: holm </code></pre>
+</div>
+</div>
+<p>Interpretação: Todas as combinações (1vs2, 1vs3 e 2vs3) apresentam diferenças estatisticamente significativas (<span class="math inline">\(p &lt; 0,05\)</span>), confirmando que cada aumento no grau histológico piora o prognóstico.</p>
+</section>
+<section id="análise-com-covariáveis-quantitativas" class="slide level2 smaller">
+<h2>Análise com Covariáveis Quantitativas</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Geral (Todos os Indivíduos)</a></li><li><a href="#tabset-2-2">Ocorrência do Evento (status = 1)</a></li><li><a href="#tabset-2-3">Censura (status = 0)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variável</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">Média</th>
+<th style="text-align: right;">Desvio_Padrao</th>
+<th style="text-align: right;">Mediana</th>
+<th style="text-align: right;">Mínimo</th>
+<th style="text-align: right;">Máximo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">686</td>
+<td style="text-align: right;">53.05</td>
+<td style="text-align: right;">10.12</td>
+<td style="text-align: right;">53.0</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">er</td>
+<td style="text-align: right;">686</td>
+<td style="text-align: right;">96.25</td>
+<td style="text-align: right;">153.08</td>
+<td style="text-align: right;">36.0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1144</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nodes</td>
+<td style="text-align: right;">686</td>
+<td style="text-align: right;">5.01</td>
+<td style="text-align: right;">5.48</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">51</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pgr</td>
+<td style="text-align: right;">686</td>
+<td style="text-align: right;">110.00</td>
+<td style="text-align: right;">202.33</td>
+<td style="text-align: right;">32.5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2380</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">size</td>
+<td style="text-align: right;">686</td>
+<td style="text-align: right;">29.33</td>
+<td style="text-align: right;">14.30</td>
+<td style="text-align: right;">25.0</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">120</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Comentários Gerais:</p>
+<ul>
+<li>A amostra apresenta uma idade média de aproximadamente 53.1 anos.</li>
+<li>O tamanho médio dos tumores é de 29.3 mm, com uma grande amplitude (mínimo de 3 e máximo de 120 mm).</li>
+<li>A variável de linfonodos (nodes) apresenta uma mediana de 3, indicando que a maior parte da amostra possui baixa disseminação inicial, apesar de casos extremos.</li>
+</ul>
+</div>
+<div id="tabset-2-2">
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variável</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">Média</th>
+<th style="text-align: right;">Desvio_Padrao</th>
+<th style="text-align: right;">Mediana</th>
+<th style="text-align: right;">Mínimo</th>
+<th style="text-align: right;">Máximo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">299</td>
+<td style="text-align: right;">53.00</td>
+<td style="text-align: right;">10.86</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">er</td>
+<td style="text-align: right;">299</td>
+<td style="text-align: right;">85.54</td>
+<td style="text-align: right;">152.68</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1091</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nodes</td>
+<td style="text-align: right;">299</td>
+<td style="text-align: right;">6.52</td>
+<td style="text-align: right;">6.14</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">36</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pgr</td>
+<td style="text-align: right;">299</td>
+<td style="text-align: right;">70.53</td>
+<td style="text-align: right;">122.21</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">912</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">size</td>
+<td style="text-align: right;">299</td>
+<td style="text-align: right;">31.46</td>
+<td style="text-align: right;">15.75</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">120</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Perfil do Grupo (Evento):</p>
+<ul>
+<li>Observa-se que pacientes que atingiram o evento tendem a possuir tumores maiores e uma contagem de linfonodos positivos superior à média geral.</li>
+<li>Os níveis medianos de receptores hormonais (pgr e er) são visivelmente menores neste grupo.</li>
+</ul>
+</div>
+<div id="tabset-2-3">
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variável</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">Média</th>
+<th style="text-align: right;">Desvio_Padrao</th>
+<th style="text-align: right;">Mediana</th>
+<th style="text-align: right;">Mínimo</th>
+<th style="text-align: right;">Máximo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">387</td>
+<td style="text-align: right;">53.09</td>
+<td style="text-align: right;">9.52</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">er</td>
+<td style="text-align: right;">387</td>
+<td style="text-align: right;">104.53</td>
+<td style="text-align: right;">153.08</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1144</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nodes</td>
+<td style="text-align: right;">387</td>
+<td style="text-align: right;">3.84</td>
+<td style="text-align: right;">4.58</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">51</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pgr</td>
+<td style="text-align: right;">387</td>
+<td style="text-align: right;">140.49</td>
+<td style="text-align: right;">242.86</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2380</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">size</td>
+<td style="text-align: right;">387</td>
+<td style="text-align: right;">27.68</td>
+<td style="text-align: right;">12.84</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">100</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Perfil do Grupo (Censura):</p>
+<ul>
+<li>Este grupo é caracterizado por possuir, em mediana, tumores menores e menos linfonodos comprometidos.</li>
+<li>Apresentam um perfil biológico mais favorável, com níveis mais altos de receptores de progesterona e estrogênio.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusão" class="slide level2 smaller scrollable">
+<h2>CONCLUSÃO</h2>
+<h3 id="síntese-dos-achados">Síntese dos Achados</h3>
+<ul>
+<li><strong>Fatores Protetores:</strong> O uso de <strong>Terapia Hormonal</strong> mostrou-se estatisticamente significativo para o aumento da sobrevida livre de recorrência.</li>
+<li><strong>Graduação de Risco:</strong> O <strong>Grau Histológico</strong> é um preditor robusto; a análise não paramétrica revelou que pacientes com Grau 3 possuem um prognóstico substancialmente pior.</li>
+<li><strong>Carga Tumoral:</strong> As variáveis quantitativas confirmaram que o aumento no <strong>tamanho do tumor</strong> e, principalmente, no <strong>número de linfonodos comprometidos</strong>, está diretamente associado à ocorrência do óbito/evento.</li>
+</ul>
+<h3 id="implicações-práticas-e-limitações">Implicações Práticas e Limitações</h3>
+<ul>
+<li><strong>Implicações:</strong> Os resultados reforçam a necessidade de estratégias de diagnóstico precoce e a eficácia de tratamentos adjuvantes hormonais em tumores sensíveis.</li>
+<li><strong>Limitações:</strong> Por ser uma base histórica (década de 80), os dados não refletem o impacto de terapias moleculares modernas (como o bloqueio de HER2) nem de novos biomarcadores que hoje são padrão na oncologia.</li>
+</ul>
+</section>
+<section id="muito-obrigado" class="slide level2 center" style="text-align:center">
+<h2><strong>Muito Obrigado!</strong></h2>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="index - Copia_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="index - Copia_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="index - Copia_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="index - Copia_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="index - Copia_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="index - Copia_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="index - Copia_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="index - Copia_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="index - Copia_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="index - Copia_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 720,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 7.0e-2,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
